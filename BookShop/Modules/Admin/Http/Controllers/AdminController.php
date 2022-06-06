@@ -57,20 +57,13 @@ class AdminController extends Controller
     public function dashboard(Request $request)
     {
         $user_ip_address = $request->ip();  
-
         $early_last_month = Carbon::now('Asia/Ho_Chi_Minh')->subMonth()->startOfMonth()->toDateString();
-
         $end_of_last_month = Carbon::now('Asia/Ho_Chi_Minh')->subMonth()->endOfMonth()->toDateString();
-
         $early_this_month = Carbon::now('Asia/Ho_Chi_Minh')->startOfMonth()->toDateString();
-
         $oneyears = Carbon::now('Asia/Ho_Chi_Minh')->subdays(365)->toDateString();
-
         $now = Carbon::now('Asia/Ho_Chi_Minh')->toDateString();
-
         $visitor_of_lastmonth = Visitor::whereBetween('date_visited',[$early_last_month,$end_of_last_month])->get(); 
         $visitor_last_month_count = $visitor_of_lastmonth->count();
-    
             //total this month
         $visitor_of_thismonth = Visitor::whereBetween('date_visited',[$early_this_month,$now])->get(); 
         $visitor_this_month_count = $visitor_of_thismonth->count();
@@ -110,54 +103,6 @@ class AdminController extends Controller
         return view('admin::404');
     }
 
-    // Login FB
-    public function login_facebook(){
-        return Socialite::driver('facebook')->redirect();
-    }
-    
-    public function callback_facebook(){
-    
-        $provider = Socialite::driver('facebook')->user();
-        $account = Social::where('provider','facebook')->where('provider_id',$provider->getId())->first();
-    
-        if($account!=NULL){
-    
-            $account_name = Login::where('id',$account->user)->first();
-            Session::put('admin_name',$account_name->name);
-            Session::put('login_normal',true);
-            Session::put('admin_id',$account_name->id);
-            return redirect('/admin/dashboard')->with('message', 'Đăng nhập thành công');
-    
-        }elseif($account==NULL){
-    
-            $admin_login = new Social([
-                'provider_id' => $provider->getId(),
-                'provider_email' => $provider->getEmail(),
-                'provider' => 'facebook'
-            ]);
-    
-            $orang = Login::where('email',$provider->getEmail())->first();
-    
-            if(!$orang){
-                $orang = Login::create([
-                    'name' => $provider->getName(),
-                    'email' => $provider->getEmail(),
-                    'password' => '',
-                ]);
-            }
-            $admin_login->login()->associate($orang);
-            $admin_login->save();
-    
-            $account_name = Login::where('id',$admin_login->user)->first();
-            Session::put('admin_name',$admin_login->name);
-            Session::put('login_normal',true);
-            Session::put('admin_id',$admin_login->id);
-            return redirect('/admin/dashboard')->with('message', 'Đăng nhập Admin thành công');
-    
-        } 
-    
-    
-    }
 
     // Dashboard
     public function filter_by_date(Request $request){
