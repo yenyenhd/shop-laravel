@@ -41,27 +41,6 @@ class HomeController extends Controller
         'banner_bottom', 'feature_product', 'new_product', 'shop_product', 'meta_desc', 'meta_keywords', 'meta_title',
         'url_canonical', 'cate_tabs', 'best_seller' ));
     }
-    public function search(Request $request){
-       
-
-        //seo 
-        $meta_desc = "Tìm kiếm sản phẩm"; 
-        $meta_keywords = "Tìm kiếm sản phẩm";
-        $meta_title = "Tìm kiếm sản phẩm";
-        $url_canonical = $request->url();
-        //--seo
-        $keywords = $request->keywords_submit;
-
-        $cate_product = DB::table('tbl_category_product')->where('category_status','0')->orderby('category_id','desc')->get(); 
-        $brand_product = DB::table('tbl_brand')->where('brand_status','0')->orderby('brand_id','desc')->get(); 
-
-        $search_product = DB::table('tbl_product')->where('product_name','like','%'.$keywords.'%')->get(); 
-
-
-        return view('pages.sanpham.search')->with('category',$cate_product)->with('brand',$brand_product)->with('search_product',$search_product)->with('meta_desc',$meta_desc)->with('meta_keywords',$meta_keywords)->with('meta_title',$meta_title)->with('url_canonical',$url_canonical)->with('slider',$slider)->with('category_post',$category_post);
-
-    }
-
     public function autocomplete_ajax(Request $request){
         $data = $request->all();
 
