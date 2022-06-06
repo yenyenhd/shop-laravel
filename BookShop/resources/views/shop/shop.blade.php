@@ -73,13 +73,7 @@
 
                             
                         </div>
-                        
-                        <div class="Compositions widget mb-30">
-                           <div class="widget_title">
-                                <h3>Sản phẩm yêu thích</h3>
-                            </div>
-                           <div id="row_wishlist" class="row"></div>
-                        </div>      
+                
                     </div>
                 </div>
             </div>
